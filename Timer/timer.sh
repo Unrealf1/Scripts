@@ -11,6 +11,7 @@ if [ ! -z "$1" ]
     sleep_time="$1"
 fi
 
+<<<<<<< HEAD
 echo "Set timer for $sleep_time seconds"
 
 sleep $sleep_time
@@ -18,6 +19,11 @@ cur_volume="$min_volume"
 
 echo "Time has come!"
 
+=======
+sleep $sleep_time
+cur_volume="$min_volume"
+
+>>>>>>> 683d440b0514b5aa8c49f320c9eb0173494039c8
 while [ 1 ]; do
     amixer set Master "$cur_volume%" &> /dev/null
     timeout -s $beep_time $beep_time speaker-test -t sine -f 1000 -l 1 &> /dev/null
