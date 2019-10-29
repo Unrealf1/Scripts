@@ -1,0 +1,8 @@
+General/build/**
+build/**
+.vs/**
+.clang_complete
+CMakeSettings.json
+.idea/**
+.cmake-build-debug/**
+

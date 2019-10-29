@@ -1,0 +1,8 @@
+@startuml
+
+class data_class {
+    id: int
+    name: string
+}
+
+@enduml
