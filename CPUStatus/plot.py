@@ -6,10 +6,15 @@ from plotly.subplots import make_subplots
 import plotly.offline
 import re
 import time
-import datetime
 from time import gmtime, strftime
 import math
+from signal import signal, SIGINT
 
+
+def onInt(signal_received, frame):
+    print("Shutting down...")
+    WritePlots()
+    exit(0)
 
 times = []
 temperatures = None
@@ -28,8 +33,8 @@ def Init():
     temp = re.findall(r'Core \d{1,}: .*°C ', out[0])
     freq = re.findall(r'[\d\.]{1,} [GM]', out[1])
 
-    temperatures = [[]] * len(temp)
-    frequences = [[]] * len(freq)
+    temperatures = [[] for _ in range(len(temp))]
+    frequences = [[] for _ in range(len(freq))]
     filename = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
 
@@ -90,12 +95,15 @@ def WritePlots():
     WritePlot(times, frequences, range(len(frequences)), "Frequency")
 
 
+
+signal(SIGINT, onInt)
 Init()
 
-# if len(temperatures) or len(frequences) is 0:
-#     print("Failed to detect cpu")
-#     exit(0)
+if len(temperatures)  is 0 or len(frequences) is 0:
+    print("Failed to detect cpu")
+    exit(0)
 
+cnt = 1
 while True:
     if len(temperatures[0]) > 100000:
         print("Creting new file")
@@ -117,6 +125,7 @@ while True:
         if ghz is not None:
             cpu_freq *= 1000
         frequences[i].append(cpu_freq)
-    WritePlots()
+    WritePlots() if (cnt%13) is 0 else None
+    cnt += 1
     time.sleep(2)
 
