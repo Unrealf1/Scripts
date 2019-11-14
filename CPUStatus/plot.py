@@ -43,7 +43,7 @@ def WritePlot(x, ylist, namelist, label):
 
     for i in range(len(ylist)):
         fig.add_scatter(secondary_y=True, x=x, y=ylist[i],
-                    marker_color='rgb(%d, %d, %d)' % (abs(math.sin(i*math.pi/12)) * 255, abs(math.cos(i*math.pi/9)) * 255, (i*33)%255), name=namelist[i])
+                    marker_color='rgb(%d, %d, %d)' % (abs(math.sin(i*math.pi/5)) * 255, abs(math.cos(i*math.pi/9)) * 255, (i*33)%255), name=namelist[i])
 
     
     fig.update_layout(
