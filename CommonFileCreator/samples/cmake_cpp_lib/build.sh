@@ -8,8 +8,20 @@ fi
 
 cd build
 
-cmake ../ $@
+if cmake ../ $@; then
+echo "calling make...";
+else 
+echo "CMake failed!";
+cd ..
+exit 1 
+fi
 
-make
+if make; then
+echo "build ready";
+else 
+echo "build failed!";
+cd ..
+exit 2
+fi
 
 cd ..
