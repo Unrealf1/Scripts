@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.5)
 project(ProjectName-Test)
 
 enable_testing()
-find_package(GTest REQUIRED)
 
 file(GLOB_RECURSE SOURCES . source/*.cpp)
 
@@ -11,6 +10,6 @@ add_executable(Test ${SOURCES})
     
 target_include_directories(Test PUBLIC "./include")
 
-target_link_libraries(Test PUBLIC General GTest::GTest GTest::Main)
+target_link_libraries(Test PUBLIC project_options project_warnings General CONAN_PKG::gtest)
 
 add_test(CommonTestsAll Test)

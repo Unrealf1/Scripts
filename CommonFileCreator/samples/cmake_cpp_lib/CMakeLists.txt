@@ -1,19 +1,57 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.13)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(ProjectName)
 
-option(DEBUG "Build with debug flags" OFF)
 option(TESTS "Build tests" OFF)
+option(COVERAGE "Build with coverage" OFF)
+option(EXAMPLE "Build example" OFF)
 
-if (DEBUG)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fsanitize=address,undefined -g")
-endif(DEBUG)
+add_library(project_options INTERFACE)
+add_library(project_warnings INTERFACE)
+
+include(cmake/CompilerWarnings.cmake)
+set_project_warnings(project_warnings)
+
+include(cmake/Sanitizers.cmake)
+enable_sanitizers(project_options)
+
+include(cmake/Doxygen.cmake)
+
+if (TESTS)
+    set(CONAN_EXTRA_REQUIRES "gtest/1.10.0" "spdlog/1.8.5")
+else()
+    set(CONAN_EXTRA_REQUIRES "spdlog/1.8.5")
+endif()
+
+include(cmake/Conan.cmake)
+run_conan()
+
+if (NOT APPLE)
+    set(CMAKE_INSTALL_RPATH $ORIGIN)
+endif()
 
 add_subdirectory("./General")
+
+if (COVERAGE)
+    include(cmake/CodeCoverage.cmake)
+    target_compile_options(CommunicatorApi PUBLIC -ftest-coverage -fprofile-arcs)
+    target_link_options(CommunicatorApi PUBLIC -lgcov --coverage)
+
+    SETUP_TARGET_FOR_COVERAGE(
+        coverage
+        Test
+        coverage
+    )
+endif()
+
 if (TESTS)
     add_subdirectory("./Test")
 endif(TESTS)
+
+if (EXAMPLE)
+    add_subdirectory("./Example")
+endif(EXAMPLE)

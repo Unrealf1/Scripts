@@ -31,7 +31,7 @@ def Init():
     out = out.decode().split('Frequency:')
 
     temp = re.findall(r'Core \d{1,}: .*°C ', out[0])
-    freq = re.findall(r'[\d\.]{1,} [GM]', out[1])
+    freq = re.findall(r'Core \d{1,}: .*', out[1])
 
     temperatures = [[] for _ in range(len(temp))]
     frequences = [[] for _ in range(len(freq))]
@@ -99,7 +99,7 @@ def WritePlots():
 signal(SIGINT, onInt)
 Init()
 
-if len(temperatures)  is 0 or len(frequences) is 0:
+if len(temperatures) == 0 or len(frequences) == 0:
     print("Failed to detect cpu")
     exit(0)
 
@@ -125,7 +125,7 @@ while True:
         if ghz is not None:
             cpu_freq *= 1000
         frequences[i].append(cpu_freq)
-    WritePlots() if (cnt%13) is 0 else None
+    WritePlots() if (cnt%13) == 0 else None
     cnt += 1
     time.sleep(2)
 
