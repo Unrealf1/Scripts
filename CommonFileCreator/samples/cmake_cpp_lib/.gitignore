@@ -1,6 +1,5 @@
-General/build/**
-build/**
-.vs/**
+**/build/**
+**/.vs/**
 .clang_complete
 CMakeSettings.json
 .idea/**
